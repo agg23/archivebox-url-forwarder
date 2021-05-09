@@ -3,7 +3,8 @@
   "name": "archivebox-url-forwarder",
   "version": "0.1",
   "description": "archivebox-url-forwarder description",
-  "permissions": ["*://192.168.1.241/*", "tabs"],
+  "permissions": ["storage", "tabs"],
+  "optional_permissions": ["<all_urls>"],
   "icons": {
     "64": "icon.png"
   },
@@ -11,9 +12,15 @@
     "default_title": "archivebox-url-forwarder (browserAction)",
     "default_icon": {
       "64": "icon.png"
-    }
+    },
+    "default_popup": "src/popup/popup.html"
   },
   "background": {
     "scripts": ["dist/background.js"]
+  },
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "archivebox-url-forwarder@agg23"
+    }
   }
 }

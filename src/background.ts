@@ -1,4 +1,5 @@
 import { browser } from "webextension-polyfill-ts";
+import { hostToMatchPattern } from "./shared";
 
 const MIN_OPEN_TIME = 10 * 1000;
 
@@ -13,6 +14,17 @@ interface Entry {
 }
 
 const parser = new DOMParser();
+
+const tabMap = new Map<
+  number,
+  {
+    url: string;
+    timestamp: number;
+    hasSent: boolean;
+  }
+>();
+
+let host: string | undefined = undefined;
 
 const fetchAndGetToken = async (url: string) => {
   const response = await fetch(url);
@@ -36,15 +48,20 @@ const fetchAndGetToken = async (url: string) => {
 };
 
 const sendUrl = async (url: string) => {
+  if (!host) {
+    console.error("Cannot send URL; no host set");
+    return;
+  }
+
   console.log(`Sending visit ${url}`);
 
-  const token = await fetchAndGetToken("http://192.168.1.241:8000/add/");
+  const token = await fetchAndGetToken(`${host}/add/`);
 
   if (!token) {
     throw new Error("Could not extract token");
   }
 
-  const response = await fetch("http://192.168.1.241:8000/add/", {
+  fetch(`${host}/add/`, {
     method: "POST",
     headers: {
       "X-CSRFToken": token,
@@ -54,10 +71,13 @@ const sendUrl = async (url: string) => {
       parser: "auto",
       depth: "0",
     }),
-  });
-
-  console.log(response);
-  console.log(response.body);
+  })
+    .then((response) => {
+      if (response.status !== 200) {
+        console.error(`Failed to save ${url}`);
+      }
+    })
+    .catch(() => console.error(`Failed to save ${url}`));
 };
 
 const checkEntry = (entry: Entry): boolean => {
@@ -71,51 +91,68 @@ const checkEntry = (entry: Entry): boolean => {
   return false;
 };
 
-const tabMap = new Map<
-  number,
-  {
-    url: string;
-    timestamp: number;
-    hasSent: boolean;
-  }
->();
+const init = () => {
+  browser.runtime.onMessage.addListener(async () => {
+    // New host saved
+    const settings = await browser.storage.sync.get("host");
+    const hostSetting: string | undefined = settings["host"];
 
-browser.tabs.onUpdated.addListener((id, changeInfo, { url }) => {
-  if (!url) {
-    return;
-  }
-
-  const existingEntry = tabMap.get(id);
-
-  if (existingEntry) {
-    checkEntry(existingEntry);
-
-    if (existingEntry.url === url) {
+    if (!hostSetting) {
+      host = undefined;
       return;
     }
-  }
 
-  tabMap.set(id, {
-    url,
-    timestamp: Date.now(),
-    hasSent: false,
+    const oldHost = host;
+
+    if (oldHost) {
+      const oldMatchPattern = hostToMatchPattern(oldHost);
+      browser.permissions.remove({
+        origins: [oldMatchPattern],
+      });
+    }
+
+    host = hostSetting;
   });
-});
 
-browser.tabs.onRemoved.addListener((id) => {
-  const existingEntry = tabMap.get(id);
+  browser.tabs.onUpdated.addListener((id, changeInfo, { url }) => {
+    if (!url) {
+      return;
+    }
 
-  if (!existingEntry) {
-    return;
-  }
+    const existingEntry = tabMap.get(id);
 
-  checkEntry(existingEntry);
+    if (existingEntry) {
+      checkEntry(existingEntry);
 
-  tabMap.delete(id);
-});
+      if (existingEntry.url === url) {
+        return;
+      }
+    }
 
-setInterval(() => {
-  for (const [, entry] of tabMap.entries()) {
-    checkEntry(entry);
-  }
-}, SEND_TICK_TIME);
+    tabMap.set(id, {
+      url,
+      timestamp: Date.now(),
+      hasSent: false,
+    });
+  });
+
+  browser.tabs.onRemoved.addListener((id) => {
+    const existingEntry = tabMap.get(id);
+
+    if (!existingEntry) {
+      return;
+    }
+
+    checkEntry(existingEntry);
+
+    tabMap.delete(id);
+  });
+
+  setInterval(() => {
+    for (const [, entry] of tabMap.entries()) {
+      checkEntry(entry);
+    }
+  }, SEND_TICK_TIME);
+};
+
+init();

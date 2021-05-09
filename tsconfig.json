@@ -1,8 +1,8 @@
 {
   "compilerOptions": {
     "module": "ESNext",
-    "outDir": "dist",
     "moduleResolution": "node",
+    "outDir": "dist",
     "sourceMap": true,
     "strict": true,
     "downlevelIteration": true
