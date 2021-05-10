@@ -1,7 +1,7 @@
 {
   "manifest_version": 2,
   "name": "archivebox-url-forwarder",
-  "version": "0.1",
+  "version": "0.1.2",
   "description": "archivebox-url-forwarder description",
   "permissions": ["storage", "tabs"],
   "optional_permissions": ["<all_urls>"],
@@ -13,10 +13,10 @@
     "default_icon": {
       "64": "icon.png"
     },
-    "default_popup": "src/popup/popup.html"
+    "default_popup": "popup.html"
   },
   "background": {
-    "scripts": ["dist/background.js"]
+    "scripts": ["background.js"]
   },
   "browser_specific_settings": {
     "gecko": {

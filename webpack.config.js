@@ -1,4 +1,5 @@
 const path = require('path');
+const CopyPlugin = require("copy-webpack-plugin");
 
 module.exports = {
   entry: {
@@ -22,4 +23,18 @@ module.exports = {
     filename: '[name].js',
     path: path.resolve(__dirname, 'dist'),
   },
+  plugins: [
+    new CopyPlugin({
+      patterns: [
+        'manifest.json',
+        'icon.png',
+        'src/popup/popup.html'
+      ].map(file => {
+        const splitPath = file.split('/')
+        const to = splitPath[splitPath.length - 1]
+
+        return { from: file, to}
+      })
+    })
+  ]
 };
