@@ -1,5 +1,6 @@
 import { browser } from "webextension-polyfill-ts";
 import { hostToMatchPattern } from "./shared";
+import { filterUrl } from "./util/url";
 
 const MIN_OPEN_TIME = 10 * 1000;
 
@@ -129,11 +130,13 @@ const init = () => {
       }
     }
 
-    tabMap.set(id, {
-      url,
-      timestamp: Date.now(),
-      hasSent: false,
-    });
+    if (!filterUrl(url)) {
+      tabMap.set(id, {
+        url,
+        timestamp: Date.now(),
+        hasSent: false,
+      });
+    }
   });
 
   browser.tabs.onRemoved.addListener((id) => {

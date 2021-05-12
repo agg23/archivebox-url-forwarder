@@ -3169,6 +3169,13 @@ slice-ansi@^4.0.0:
     astral-regex "^2.0.0"
     is-fullwidth-code-point "^3.0.0"
 
+smurl@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/smurl/-/smurl-2.0.0.tgz#45e7961facff0417b3527c4bc37ea3d0e5b42e7c"
+  integrity sha512-tZQIwMZQkmwqyMZuKFdQNpsD1jpNW3ISgIXusMWkRH21d5lXgHv1eDZzsmnW/nVxlkojnTYTzgJ6m1zCWngKDQ==
+  dependencies:
+    urlite "^3.0.0"
+
 sonic-boom@^1.0.2:
   version "1.4.1"
   resolved "https://registry.yarnpkg.com/sonic-boom/-/sonic-boom-1.4.1.tgz#d35d6a74076624f12e6f917ade7b9d75e918f53e"
@@ -3450,6 +3457,11 @@ ts-loader@^9.1.2:
     micromatch "^4.0.0"
     semver "^7.3.4"
 
+tslib@^2.2.0:
+  version "2.2.0"
+  resolved "https://registry.yarnpkg.com/tslib/-/tslib-2.2.0.tgz#fb2c475977e35e241311ede2693cee1ec6698f5c"
+  integrity sha512-gS9GVHRU+RGn5KQM2rllAlR3dU6m7AcpJKdtH8gFvQiC4Otgk98XnmMU+nZenHt/+VhnBPWwgrJsyrdcw6i23w==
+
 tunnel-agent@^0.6.0:
   version "0.6.0"
   resolved "https://registry.yarnpkg.com/tunnel-agent/-/tunnel-agent-0.6.0.tgz#27a5dea06b36b04a0a9966774b290868f0fc40fd"
@@ -3556,6 +3568,11 @@ url-parse-lax@^3.0.0:
   integrity sha1-FrXK/Afb42dsGxmZF3gj1lA6yww=
   dependencies:
     prepend-http "^2.0.0"
+
+urlite@^3.0.0:
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/urlite/-/urlite-3.0.0.tgz#782da401b1c961edeb5e6c681d99410a1e86f0de"
+  integrity sha512-Ffgts2pTfFFybsHm1uk8s01jBpIBIU8/ZBrTVFpsM5eA1AYVsEfBYkiSahyJcuCEdLvfOkjq5vXznlcI1HhfRw==
 
 util-deprecate@~1.0.1:
   version "1.0.2"

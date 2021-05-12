@@ -1,7 +1,7 @@
 {
   "manifest_version": 2,
   "name": "archivebox-url-forwarder",
-  "version": "0.1.2",
+  "version": "0.2",
   "description": "archivebox-url-forwarder description",
   "permissions": ["storage", "tabs"],
   "optional_permissions": ["<all_urls>"],

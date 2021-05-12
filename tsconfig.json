@@ -1,11 +1,13 @@
 {
   "compilerOptions": {
-    "module": "ESNext",
+    "module": "ES6",
+    "lib": ["DOM", "ES2019"],
     "moduleResolution": "node",
     "outDir": "dist",
     "sourceMap": true,
     "strict": true,
-    "downlevelIteration": true
+    "downlevelIteration": true,
+    "importHelpers": true
   },
   "include": ["src/**/*"]
 }
