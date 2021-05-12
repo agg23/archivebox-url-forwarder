@@ -93,6 +93,10 @@ const checkEntry = (entry: Entry): boolean => {
 };
 
 const init = () => {
+  browser.storage.sync.get("host").then((settings) => {
+    host = settings["host"];
+  });
+
   browser.runtime.onMessage.addListener(async () => {
     // New host saved
     const settings = await browser.storage.sync.get("host");
